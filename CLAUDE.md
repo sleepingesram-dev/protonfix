@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ProtonFix AI is a deterministic Linux gaming diagnosis engine. It analyzes Proton, Wine, DXVK, VKD3D, and GPU driver logs to identify gaming failures. The philosophy is **deterministic pattern matching first, OpenAI GPT-4.1-mini fallback only when fingerprints don't match**.
+ProtonFix is a deterministic Linux gaming diagnosis engine. It analyzes Proton, Wine, DXVK, VKD3D, and GPU driver logs to identify gaming failures. The philosophy is **deterministic pattern matching first, OpenAI GPT-4.1-mini fallback only when fingerprints don't match**.
 
 ## Dev Startup
 

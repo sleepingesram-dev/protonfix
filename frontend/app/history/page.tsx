@@ -27,7 +27,7 @@ export default function HistoryPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
-            ProtonFix AI
+            ProtonFix
           </p>
           <h1 className="mb-3 text-4xl font-bold">Diagnosis History</h1>
           <p className="max-w-3xl text-zinc-400">

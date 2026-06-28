@@ -132,7 +132,7 @@ export default function SubmitPage() {
     <main className="min-h-screen bg-zinc-950 p-8 text-white">
       <div className="mx-auto max-w-2xl">
         <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
-          ProtonFix AI
+          ProtonFix
         </p>
         <h1 className="mb-2 text-4xl font-bold">Submit a Log</h1>
         <p className="mb-8 text-zinc-400">

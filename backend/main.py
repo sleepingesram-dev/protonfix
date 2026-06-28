@@ -13,7 +13,7 @@ from redactor import redact
 APP_VERSION = "0.7.0"
 MAX_LOG_BYTES = 10 * 1024 * 1024  # 10 MB
 
-app = FastAPI(title="ProtonFix AI", version=APP_VERSION)
+app = FastAPI(title="ProtonFix", version=APP_VERSION)
 
 UPLOAD_DIR = DATA_DIR / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

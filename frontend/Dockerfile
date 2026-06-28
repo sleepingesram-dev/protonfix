@@ -21,6 +21,8 @@ RUN npm run build
 
 # Stage 3 — minimal production image (uses Next.js standalone output)
 FROM node:20-alpine AS runner
+LABEL org.opencontainers.image.title="ProtonFix Frontend"
+LABEL org.opencontainers.image.description="Deterministic Linux gaming log diagnosis engine — Next.js frontend"
 WORKDIR /app
 
 ENV NODE_ENV=production

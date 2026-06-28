@@ -1,8 +1,8 @@
-# ProtonFix AI v1.0 Architecture
+# ProtonFix v1.0 Architecture
 
 ## Purpose
 
-ProtonFix AI is a deterministic Linux gaming diagnosis engine with AI fallback.
+ProtonFix is a deterministic Linux gaming diagnosis engine with AI fallback.
 
 The goal is not just to detect errors, but to explain failures through a structured knowledge graph built from Proton, Steam, Wine, DXVK, VKD3D, Gamescope, GameMode, MangoHud, Vulkan, GPU driver, filesystem, and system logs.
 

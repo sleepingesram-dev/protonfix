@@ -1,0 +1,13 @@
+# ProtonFix — Caddy reverse proxy
+#
+# {$DOMAIN} is read from the DOMAIN environment variable.
+# Caddy obtains TLS certificates from Let's Encrypt automatically.
+# Both the apex domain and the api. subdomain need A records pointing to this server.
+
+{$DOMAIN} {
+    reverse_proxy frontend:3000
+}
+
+api.{$DOMAIN} {
+    reverse_proxy backend:8000
+}

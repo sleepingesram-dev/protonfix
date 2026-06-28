@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const VERSION = "0.7.0";
 
 const NAV_LINKS = [
-  { href: "/", label: "Analyze" },
+  { href: "/analyze", label: "Analyze" },
   { href: "/history", label: "History" },
   { href: "/stats", label: "Stats" },
   { href: "/submit", label: "Submit Log" },
@@ -24,7 +24,7 @@ export default function AppNav() {
             PF
           </div>
           <div>
-            <p className="text-lg font-bold leading-tight">ProtonFix AI</p>
+            <p className="text-lg font-bold leading-tight">ProtonFix</p>
             <p className="text-xs text-zinc-500">Linux Gaming Troubleshooter</p>
           </div>
         </Link>

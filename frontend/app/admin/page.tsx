@@ -34,7 +34,7 @@ export default function AdminPage() {
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
-              ProtonFix AI
+              ProtonFix
             </p>
             <h1 className="mb-2 text-4xl font-bold">Admin — Submissions</h1>
             <p className="text-zinc-400">

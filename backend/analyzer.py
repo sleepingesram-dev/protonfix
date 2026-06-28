@@ -25,7 +25,7 @@ def clean_json_response(text: str) -> str:
 
 def analyze_log_text(log_text: str, parsed: dict) -> dict:
     prompt = f"""
-You are ProtonFix AI, a Linux gaming troubleshooting assistant.
+You are ProtonFix, a Linux gaming troubleshooting assistant.
 
 Analyze the uploaded Steam, Proton, Wine, DXVK, VKD3D, Gamescope, GameMode, or GPU driver log.
 

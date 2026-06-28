@@ -28,7 +28,7 @@ export default function DiagnosisSummary({ result }: DiagnosisSummaryProps) {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-2xl font-bold">Diagnosis</h2>
         <span className={`rounded-lg border px-3 py-1 text-sm font-semibold ${sourceBadge}`}>
-          {aiUsed ? "AI" : "⚡"} {sourceLabel}
+          {aiUsed ? "✦" : "⚡"} {sourceLabel}
         </span>
       </div>
 

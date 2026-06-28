@@ -1,0 +1,38 @@
+# Production overlay for VPS deployment with HTTPS via Caddy.
+#
+# Usage (manual):
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Usage (automatic via .env):
+#   Set COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml in .env —
+#   then plain `docker compose` commands pick up both files automatically.
+#
+# Required: DOMAIN must be set (in .env or the environment) before building.
+
+services:
+  # Rebuild frontend with the production API URL baked in.
+  frontend:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: https://api.${DOMAIN}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3 (QUIC)
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      DOMAIN: ${DOMAIN}
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  caddy_data:
+  caddy_config:

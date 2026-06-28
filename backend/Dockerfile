@@ -1,5 +1,8 @@
 FROM python:3.12-slim
 
+LABEL org.opencontainers.image.title="ProtonFix Backend"
+LABEL org.opencontainers.image.description="Deterministic Linux gaming log diagnosis engine — FastAPI backend"
+
 WORKDIR /app
 
 # Install dependencies first for layer caching
