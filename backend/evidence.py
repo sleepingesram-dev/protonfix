@@ -58,54 +58,6 @@ def build_evidence_id(pattern: str, line_number: int | None) -> str:
     return f"evidence_{safe_pattern}_line_{line_number}"
 
 
-def extract_evidence_from_log(
-    log_text: str,
-    error_patterns: dict[str, dict],
-    source: str = "proton_log",
-) -> list[Evidence]:
-    evidence_items: list[Evidence] = []
-    seen: set[str] = set()
-
-    for line_number, line in enumerate(log_text.splitlines(), start=1):
-        clean_line = normalize_line(line)
-        lower_line = clean_line.lower()
-
-        if not clean_line:
-            continue
-
-        for pattern, info in error_patterns.items():
-            if pattern.lower() not in lower_line:
-                continue
-
-            fingerprint = info.get("fingerprint")
-            evidence_id = build_evidence_id(pattern, line_number)
-
-            if evidence_id in seen:
-                continue
-
-            evidence_items.append(
-                Evidence(
-                    id=evidence_id,
-                    line_number=line_number,
-                    source=source,
-                    raw_text=clean_line,
-                    extracted_pattern=pattern,
-                    evidence_type=info.get("category", "unknown"),
-                    severity=info.get("severity", "low"),
-                    confidence=100,
-                    supports=[fingerprint] if fingerprint else [],
-                    contradicts=[],
-                    metadata={
-                        "fingerprint": fingerprint,
-                        "category": info.get("category"),
-                    },
-                )
-            )
-
-            seen.add(evidence_id)
-
-    return evidence_items
-
 
 def evidence_to_dict(evidence: Evidence) -> dict[str, Any]:
     return {
