@@ -105,13 +105,16 @@ PROTON_FINGERPRINTS = [
         category="Media Foundation",
         severity="medium",
         patterns=[
+            # Specific patterns first — longer strings give higher confidence score
+            "err:module:import_dll mfplat.dll",
+            "err:module:import_dll mf.dll",
+            "err:module:import_dll wmvcore.dll",
+            "mfplat.dll not found",
             "mfplat",
             "mf.dll",
             "mfreadwrite",
             "wmvcore",
             "windowsmediafoundation",
-            "err:module:import_dll mfplat.dll",
-            "err:module:import_dll mf.dll",
         ],
         known_fix=[
             "Use GE-Proton — it includes Media Foundation patches.",

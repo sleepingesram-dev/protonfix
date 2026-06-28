@@ -129,22 +129,23 @@ def parse_log(log_text: str) -> dict:
             data["errors"].append(clean_line)
             seen_errors.add(clean_line)
 
-    seen_fingerprints = set()
+    # Collect best match per fingerprint (highest confidence wins over first match)
+    best_match_per_fingerprint: dict[str, tuple[dict, int]] = {}
 
     for pattern, info in ERROR_PATTERNS.items():
         if pattern.lower() in log_text.lower():
             fingerprint = info["fingerprint"]
+            confidence = calculate_confidence(pattern, info)
 
-            if fingerprint not in seen_fingerprints:
-                fingerprint_info = info.copy()
-                fingerprint_info["confidence"] = calculate_confidence(
-                  pattern,
-                  fingerprint_info,
-                )
-                fingerprint_info["metadata"] = get_fingerprint_metadata(fingerprint)
+            existing = best_match_per_fingerprint.get(fingerprint)
+            if existing is None or confidence > existing[1]:
+                best_match_per_fingerprint[fingerprint] = (info, confidence)
 
-                data["fingerprints"].append(fingerprint_info)
-                seen_fingerprints.add(fingerprint)
+    for fingerprint, (info, confidence) in best_match_per_fingerprint.items():
+        fingerprint_info = info.copy()
+        fingerprint_info["confidence"] = confidence
+        fingerprint_info["metadata"] = get_fingerprint_metadata(fingerprint)
+        data["fingerprints"].append(fingerprint_info)
 
     data["fingerprints"] = rank_fingerprints(data["fingerprints"])
 
