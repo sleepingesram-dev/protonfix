@@ -1,0 +1,17 @@
+{
+  "id": "eac_linux_rejection",
+  "description": "EasyAntiCheat rejects launch on Linux — exit code 3 confirms AC blocked the process",
+  "log": "Game: Apex Legends\nAppID: 1172470\nProton: 10.0-1\nGPU: NVIDIA GeForce RTX 4080\n\nfsync: up and running.\nwine: RLIMIT_NICE is <= 20, unable to use setpriority safely\nEasyAntiCheat: failed to initialize\nEasyAntiCheat_EOS: authentication failed\nerr:   EasyAntiCheat initialization permanently failed\n\nGame process removed: AppID 1172470 \"%command%\", ProcID 22222\nGame exited with status 3\n",
+  "tags": ["anticheat", "eac", "nvidia", "exit-code-3"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["EAC_FAILURE"],
+      "forbidden": ["VULKAN_DRIVER_MISSING", "GAMESCOPE_FAILURE"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["exit code 3", "anti-cheat"]
+  }
+}

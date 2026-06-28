@@ -1,0 +1,17 @@
+{
+  "id": "media_foundation_mfplat",
+  "description": "mfplat.dll missing — game needs Windows Media Foundation for video playback / DRM",
+  "log": "Game: Need for Speed Heat\nAppID: 1262540\nProton: 10.0-1\nGPU: NVIDIA GeForce RTX 3060\n\nfsync: up and running.\nerr:module:import_dll mfplat.dll\nerr:module:LdrInitializeThunk Initializing dlls for L\"C:\\\\Program Files\\\\NFS\\\\NFS16.exe\" failed, status c0000135\nerr:   module: failed to load mfplat\n\nGame exited with status 1\n",
+  "tags": ["dll", "mfplat", "media", "nvidia"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["MEDIA_FOUNDATION_RELATED", "PROTON_DLL_MISSING"],
+      "forbidden": ["VULKAN_DRIVER_MISSING", "EAC_FAILURE"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

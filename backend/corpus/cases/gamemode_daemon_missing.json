@@ -1,0 +1,17 @@
+{
+  "id": "gamemode_daemon_missing",
+  "description": "gamemoderun in launch options but gamemode daemon not running — request fails silently",
+  "log": "Game: Death Stranding Director's Cut\nAppID: 1850570\nProton: 10.0-1\nGPU: AMD Radeon RX 7800 XT\n\nfsync: up and running.\nGameMode: Failed to request mode: com.feralinteractive.GameMode was not provided by any .service files\nGameMode: gamemode request failed\ngamemoded: failed to activate, gamemode service not running\n\nGame process removed: AppID 1850570 \"gamemoderun -- %command%\", ProcID 8888\nGame exited with status 0\n",
+  "tags": ["gamemode", "amd"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["GAMEMODE_REQUEST_FAILURE", "GAMEMODE_DAEMON_RELATED"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["low", "medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["exit code 0"]
+  }
+}

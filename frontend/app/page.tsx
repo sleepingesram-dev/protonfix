@@ -1,58 +1,38 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { analyzeLog as analyzeLogApi, getStats, getHistory, } from "@/lib/api";
-import type { DiagnosisResult, Stats, HistoryEntry, } from "@/types/diagnosis";
+import { analyzeLog as analyzeLogApi, getStats, getHistory } from "@/lib/api";
+import type { DiagnosisResult, Stats, HistoryEntry } from "@/types/diagnosis";
 import DependencyChainCard from "@/components/diagnosis/DependencyChainCard";
-import Card from "@/components/ui/Card";
-import StatCard from "@/components/ui/StatCard";
-import SeverityBadge from "@/components/ui/SeverityBadge";
-import ConfidenceBadge from "@/components/ui/ConfidenceBadge";
 import Dashboard from "@/components/dashboard/Dashboard";
-import { humanizeFingerprint } from "@/lib/fingerprints";
 import DiagnosisSummary from "@/components/diagnosis/DiagnosisSummary";
+import ExportButton from "@/components/diagnosis/ExportButton";
 import FingerprintList from "@/components/diagnosis/FingerprintList";
 import PrimaryCauseCard from "@/components/diagnosis/PrimaryCauseCard";
 import ErrorInfoGrid from "@/components/diagnosis/ErrorInfoGrid";
 import FixStepsCard from "@/components/diagnosis/FixStepsCard";
 import RecommendedCommandsCard from "@/components/diagnosis/RecommendedCommandsCard";
 import WarningsCard from "@/components/diagnosis/WarningsCard";
+import ErrorBanner from "@/components/ui/ErrorBanner";
 
-function getSeverityBadge(severity: string) {
-  const level = severity?.toLowerCase();
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
 
-  if (level === "high") {
-    return (
-      <span className="rounded bg-red-900 px-2 py-1 text-xs font-bold text-red-200">
-        🔴 HIGH
-      </span>
-    );
-  }
-
-  if (level === "medium") {
-    return (
-      <span className="rounded bg-yellow-900 px-2 py-1 text-xs font-bold text-yellow-200">
-        🟡 MEDIUM
-      </span>
-    );
-  }
-
+function LoadingSkeleton() {
   return (
-    <span className="rounded bg-green-900 px-2 py-1 text-xs font-bold text-green-200">
-      🟢 LOW
-    </span>
-  );
-}
-
-function getConfidenceBadge(confidence: number | undefined) {
-  if (!confidence) return null;
-
-  return (
-    <span className="rounded bg-blue-900 px-2 py-1 text-xs font-bold text-blue-200">
-      {confidence}% confidence
-    </span>
+    <div className="animate-pulse space-y-6 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+      <div className="flex items-center justify-between">
+        <div className="h-7 w-36 rounded bg-zinc-800" />
+        <div className="h-6 w-48 rounded-lg bg-zinc-800" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="h-32 rounded-lg bg-zinc-800" />
+        <div className="h-32 rounded-lg bg-zinc-800" />
+      </div>
+      <div className="h-20 rounded-lg bg-zinc-800" />
+      <div className="h-28 rounded-lg bg-zinc-800" />
+      <div className="h-16 rounded-lg bg-zinc-800" />
+    </div>
   );
 }
 
@@ -60,97 +40,68 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<DiagnosisResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
   useEffect(() => {
-    async function loadDashboardData() {
-      try {
-        const [statsData, historyData] = await Promise.all([
-          getStats(),
-                                                           getHistory(),
-        ]);
-
-        setStats(statsData);
-        setHistory(Array.isArray(historyData) ? historyData : []);
-      } catch (err) {
-        console.error("Failed to load dashboard data:", err);
-      } finally {
-        setDashboardLoading(false);
-      }
-    }
-
-    loadDashboardData();
+    Promise.all([getStats(), getHistory()])
+      .then(([s, h]) => {
+        setStats(s);
+        setHistory(Array.isArray(h) ? h : []);
+      })
+      .catch((err) => console.error("Dashboard load failed:", err))
+      .finally(() => setDashboardLoading(false));
   }, []);
+
+  function validateAndSetFile(f: File) {
+    if (f.size > MAX_FILE_BYTES) {
+      setError(`File too large (${(f.size / 1024 / 1024).toFixed(1)} MB). Maximum is 10 MB.`);
+      return;
+    }
+    setError(null);
+    setFile(f);
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(true);
+  }
+
+  function handleDragLeave() {
+    setDragOver(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const dropped = e.dataTransfer.files[0];
+    if (dropped) validateAndSetFile(dropped);
+  }
 
   async function copyText(text: string, label: string) {
     await navigator.clipboard.writeText(text);
     setCopied(label);
-
-    setTimeout(() => {
-      setCopied(null);
-    }, 1500);
+    setTimeout(() => setCopied(null), 1500);
   }
 
   async function handleAnalyzeLog() {
     if (!file) return;
-
     setLoading(true);
     setResult(null);
-
+    setError(null);
     try {
       const data = await analyzeLogApi(file);
       setResult(data);
-    } catch (error) {
-      setResult({
-        filename: file.name,
-        characters: 0,
-
-        summary: "The frontend could not reach the backend server.",
-        probable_cause:
-        "The FastAPI backend may not be running, or CORS may be misconfigured.",
-
-        confidence: "high",
-        severity: "high",
-
-        used_known_issue: false,
-        known_issue_id: undefined,
-
-        detected_errors: ["Failed to fetch backend response."],
-
-        fix_steps: [
-          "Make sure the backend server is running.",
-          "Open http://127.0.0.1:8000 in your browser and confirm it loads.",
-          "Restart the backend with: python -m uvicorn main:app --reload",
-        ],
-
-        recommended_commands: [
-          "cd ~/protonfix-ai/backend",
-          "source .venv/bin/activate.fish",
-          "python -m uvicorn main:app --reload",
-        ],
-
-        extra_info_needed: [],
-        warnings: [],
-
-        parsed: {
-          game: null,
-          appid: null,
-          proton_version: null,
-          dxvk_version: null,
-          vkd3d_version: null,
-          gpu: null,
-          errors: [],
-          fingerprints: [],
-          primary_fingerprint: null,
-        },
-
-        known_issue: null,
-        ai_used: false,
-        ai_result: null,
-      });
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Unknown error";
+      setError(
+        `Analysis failed: ${msg}. Make sure the backend is running on port 8000.`
+      );
     } finally {
       setLoading(false);
     }
@@ -161,35 +112,28 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 p-8 text-white">
       <div className="mx-auto max-w-6xl">
+        {/* Hero */}
         <div className="mb-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
           <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-400">
               Linux Gaming Troubleshooter
             </p>
-
-            <h1 className="mb-3 text-4xl font-bold">
-              Diagnose Proton logs fast.
-            </h1>
-
+            <h1 className="mb-3 text-4xl font-bold">Diagnose Proton logs fast.</h1>
             <p className="max-w-3xl text-zinc-400">
-              Upload a Steam, Proton, Wine, DXVK, VKD3D, Vulkan, or Gamescope
-              log. ProtonFix checks known Linux gaming failures first, then only
-              uses AI when no deterministic fix is found.
+              Upload a Steam, Proton, Wine, DXVK, VKD3D, Vulkan, or Gamescope log.
+              ProtonFix checks known Linux gaming failures first, then only uses AI
+              when no deterministic fix is found.
             </p>
-
             <div className="mt-5 flex flex-wrap gap-2 text-sm">
               <span className="rounded-full border border-blue-800 bg-blue-950 px-3 py-1 text-blue-200">
                 Fingerprint-first
               </span>
-
               <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-zinc-300">
                 Low API cost
               </span>
-
               <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-zinc-300">
                 AI fallback
               </span>
-
               <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-zinc-300">
                 SQLite history
               </span>
@@ -200,9 +144,7 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
               Current Build
             </p>
-
             <p className="mt-2 text-3xl font-bold text-white">v0.7</p>
-
             <div className="mt-4 space-y-2 text-sm text-zinc-400">
               <p>✓ 71 fingerprints</p>
               <p>✓ Confidence scoring</p>
@@ -212,40 +154,55 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Upload */}
         <div className="mb-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+          {error && (
+            <div className="mb-4">
+              <ErrorBanner message={error} onDismiss={() => setError(null)} />
+            </div>
+          )}
+
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
             <div>
               <p className="mb-2 text-xl font-bold">Upload Log File</p>
-
               <p className="mb-4 max-w-2xl text-sm text-zinc-400">
-                Drop in a Steam, Proton, Wine, DXVK, VKD3D, Vulkan, Gamescope,
-                or GameMode log. ProtonFix will save it, parse it, fingerprint
-                it, and generate a diagnosis.
+                Drop in a Steam, Proton, Wine, DXVK, VKD3D, Vulkan, Gamescope, or
+                GameMode log. Max 10 MB.
               </p>
 
-              <label className="block cursor-pointer rounded-xl border border-dashed border-zinc-700 bg-zinc-950 p-6 transition hover:border-blue-600 hover:bg-zinc-900">
+              <label
+                className={`block cursor-pointer rounded-xl border border-dashed p-6 transition ${
+                  dragOver
+                    ? "border-blue-500 bg-blue-950/20"
+                    : "border-zinc-700 bg-zinc-950 hover:border-blue-600 hover:bg-zinc-900"
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
                 <input
                   type="file"
                   accept=".txt,.log"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) validateAndSetFile(f);
+                  }}
                   className="hidden"
                 />
-
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                   <p className="font-semibold text-zinc-200">
-                    {file ? file.name : "Choose a .log or .txt file"}
+                    {file ? file.name : "Choose or drag a .log or .txt file"}
                   </p>
-
                   <p className="text-sm text-zinc-500">
                     {file
-                      ? "Ready to analyze."
-                      : "Click here to select a log file from your system."}
+                      ? `${(file.size / 1024).toFixed(1)} KB — ready to analyze`
+                      : "Click to browse, or drag a file here"}
                   </p>
                 </div>
               </label>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 pt-10">
               <button
                 onClick={handleAnalyzeLog}
                 disabled={!file || loading}
@@ -253,23 +210,28 @@ export default function Home() {
               >
                 {loading ? "Analyzing..." : "Analyze Log"}
               </button>
-
               <p className="max-w-xs text-xs text-zinc-500">
-                Known fixes are checked first. AI is only used if no known issue
-                matches.
+                Known fixes are checked first. AI is only used as a fallback.
               </p>
             </div>
           </div>
         </div>
 
-        <Dashboard
-          stats={stats}
-          history={history}
-          loading={dashboardLoading}
-        />
+        {/* Dashboard */}
+        <Dashboard stats={stats} history={history} loading={dashboardLoading} />
 
-        {result && (
+        {/* Loading skeleton */}
+        {loading && <LoadingSkeleton />}
+
+        {/* Results */}
+        {result && !loading && (
           <div className="space-y-6 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs text-zinc-500">
+                Diagnosis #{result.history_id ?? "—"}
+              </span>
+              <ExportButton result={result} />
+            </div>
 
             <DiagnosisSummary result={result} />
 
@@ -299,9 +261,7 @@ export default function Home() {
               onCopy={copyText}
             />
 
-            <WarningsCard
-              warnings={result.warnings}
-            />
+            <WarningsCard warnings={result.warnings} />
           </div>
         )}
       </div>

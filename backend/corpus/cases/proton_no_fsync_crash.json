@@ -1,0 +1,17 @@
+{
+  "id": "proton_no_fsync_crash",
+  "description": "PROTON_NO_FSYNC=1 in launch options + Wine crash — context enrichment must warn about disabled sync",
+  "log": "Game: Cyberpunk 2077\nAppID: 1091500\nProton: 10.0-1\nGPU: AMD Radeon RX 7900 XTX\n\nwine: RLIMIT_NICE is <= 20, unable to use setpriority safely\nwine: Unhandled page fault on read access to 0x00000010 at address 0x7f1234567890\n\nGame process removed: AppID 1091500 \"PROTON_NO_FSYNC=1 PROTON_NO_ESYNC=1 %command%\", ProcID 77777\nGame exited with status 1\n",
+  "tags": ["wine", "crash", "sync", "launch-options"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["WINE_CRASH"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["proton_no_fsync", "fsync"]
+  }
+}

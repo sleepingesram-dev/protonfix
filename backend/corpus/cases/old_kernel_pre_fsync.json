@@ -1,0 +1,17 @@
+{
+  "id": "old_kernel_pre_fsync",
+  "description": "Wine crash on kernel 5.10 — pre-fsync, no sync primitives available, kernel upgrade warning expected",
+  "log": "Game: Valheim\nAppID: 892970\nProton: 9.0-3\nGPU: AMD Radeon RX 6600\nKernel: 5.10.0-19-generic\n\nwine: RLIMIT_NICE is <= 20, unable to use setpriority safely\nwine: Unhandled page fault on read access to 0x00000004 at address 0x7f00000000\n\nGame exited with status 1\n",
+  "tags": ["wine", "crash", "kernel", "fsync", "amd"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["WINE_CRASH"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["5.16", "fsync"]
+  }
+}

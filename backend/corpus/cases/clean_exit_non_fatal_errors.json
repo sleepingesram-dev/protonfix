@@ -1,0 +1,17 @@
+{
+  "id": "clean_exit_non_fatal_errors",
+  "description": "Log has Vulkan warnings but game exits cleanly (code 0) — errors are non-fatal, warn the user",
+  "log": "Game: Stardew Valley\nAppID: 413150\nProton: 9.0-3\nGPU: AMD Radeon RX 7600\n\nfsync: up and running.\ninfo:  DXVK: v2.5.3\nerr:   vkGetPhysicalDeviceProperties: VK_ERROR_INCOMPATIBLE_DRIVER\nerr:   DXVK: initialization warning (non-fatal, falling back to D3D9)\nwine: RLIMIT_NICE is <= 20, unable to use setpriority safely\n\nGame exited with status 0\n",
+  "tags": ["vulkan", "amd", "clean-exit", "non-fatal"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": [],
+      "forbidden": []
+    },
+    "confidence": ["low", "medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["exit code 0", "non-fatal"]
+  }
+}

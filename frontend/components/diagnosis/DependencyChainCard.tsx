@@ -1,9 +1,9 @@
 import Card from "@/components/ui/Card";
-import type { FingerprintResult } from "@/types/diagnosis";
+import type { Fingerprint } from "@/types/diagnosis";
 
 type DependencyChainCardProps = {
     chain?: string[];
-    fingerprints?: FingerprintResult[];
+    fingerprints?: Fingerprint[];
 };
 
 export default function DependencyChainCard({

@@ -2,8 +2,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from config import DATA_DIR
 
-STATS_DIR = Path("stats")
+STATS_DIR = DATA_DIR / "stats"
 STATS_FILE = STATS_DIR / "stats.json"
 
 

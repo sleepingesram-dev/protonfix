@@ -1,0 +1,17 @@
+{
+  "id": "ntdll_access_violation",
+  "description": "Windows ACCESS_VIOLATION (0xC0000005) — ntdll SEH exception, exit code enrichment required",
+  "log": "Game: Elden Ring\nAppID: 1245620\nProton: 10.0-1\nGPU: AMD Radeon RX 7800 XT\n\nfsync: up and running.\nerr:seh:setup_exception stack overflow 0x00000000\nerr:   ntdll: exception in thread 003c code 0xC0000005 address 0x7fff00000000\nerr:ntdll:RtlRaiseException status 0xc0000005\n\nGame exited with code 0xc0000005\n",
+  "tags": ["wine", "crash", "access-violation", "ntdll"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["NTDLL_RELATED_CRASH"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING", "DISK_FULL"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["0xc0000005", "access_violation"]
+  }
+}

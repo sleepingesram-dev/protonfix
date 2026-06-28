@@ -96,7 +96,7 @@ export default function Dashboard({ stats, history, loading }: DashboardProps) {
                         <SeverityBadge severity={item.severity} />
                       )}
 
-                      {item.confidence && (
+                      {item.confidence != null && (
                         <ConfidenceBadge confidence={item.confidence} />
                       )}
 

@@ -1,0 +1,17 @@
+{
+  "id": "steam_runtime_failure",
+  "description": "Steam Linux Runtime (pressure-vessel) fails to initialize — container can't start",
+  "log": "Game: Baldur's Gate 3\nAppID: 1086940\nProton: 10.0-1\nGPU: AMD Radeon RX 7700 XT\n\nfsync: up and running.\nerr:   steam-runtime: failed to start container\nerr:   pressure-vessel: setup failed: bwrap: creating user namespace: Operation not permitted\nerr:   steam linux runtime: container exited with status 1\n\nGame exited with status 1\n",
+  "tags": ["steam-runtime", "pressure-vessel", "container", "amd"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["STEAM_LINUX_RUNTIME_RELATED"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["low", "medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

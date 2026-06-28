@@ -1,0 +1,17 @@
+{
+  "id": "wine_page_fault",
+  "description": "Generic Wine crash — unhandled page fault, non-zero exit, no anti-cheat",
+  "log": "Game: Soulless Dungeon\nAppID: 1234567\nProton: 10.0-1\nGPU: AMD Radeon RX 7800 XT\n\nfsync: up and running.\nwine: RLIMIT_NICE is <= 20, unable to use setpriority safely\nwine: Unhandled page fault on read access to 0x00000000 at address 0x00007f1234567890 (thread 003c), starting debugger...\nUnhandled exception: page fault on read access to 0x00000000 in 64-bit code (0x00007f1234567890).\n\nGame exited with status 1\n",
+  "tags": ["wine", "crash", "page-fault"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["WINE_CRASH"],
+      "forbidden": ["EAC_FAILURE", "BATTLEYE_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

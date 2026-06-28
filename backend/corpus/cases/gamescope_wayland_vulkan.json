@@ -1,0 +1,17 @@
+{
+  "id": "gamescope_wayland_vulkan",
+  "description": "Gamescope vkCreateDevice fails on Wayland — extension not present, RADV adapter mismatch",
+  "log": "Game: DOOM Eternal\nAppID: 782330\nProton: GE-Proton10-34\nGPU: AMD Radeon RX 7700 XT\nSession: KDE Wayland\n\nfsync: up and running.\n[gamescope] [Info]  console: gamescope version 3.16.23\n[gamescope] [Info]  vulkan: selecting physical device 'AMD Radeon RX 7700 XT (RADV NAVI33)'\n[gamescope] [Error] vulkan: vkCreateDevice failed (VK_ERROR_EXTENSION_NOT_PRESENT)\n[gamescope] [Error] Failed to initialize Vulkan\nerr:   DxvkAdapter: Failed to initialize adapter\n\nGame process removed: AppID 782330 \"gamescope -f -W 2560 -H 1440 -- %command%\", ProcID 11111\nGame exited with status 1\n",
+  "tags": ["gamescope", "vulkan", "amd", "wayland"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["GAMESCOPE_VULKAN_INIT_FAILURE", "VK_ERROR_EXTENSION_NOT_PRESENT"],
+      "forbidden": ["EAC_FAILURE", "BATTLEYE_FAILURE"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": ["xwayland", "gamescope"],
+    "warnings_contain": []
+  }
+}

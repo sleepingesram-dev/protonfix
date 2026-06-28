@@ -1,0 +1,17 @@
+{
+  "id": "no_pattern_ai_fallback",
+  "description": "Denuvo DRM license failure — no deterministic pattern exists yet, AI fallback expected",
+  "log": "Game: Some DRM-Heavy Game\nAppID: 9999998\nProton: 10.0-1\nGPU: AMD Radeon RX 7800 XT\n\nfsync: up and running.\nDenuvoLicenseService: license verification failed (server unreachable)\nDenuvoLicenseService: offline grace period expired\nDenuvo: unable to validate product license, exiting\n\nGame exited with status 1\n",
+  "tags": ["drm", "denuvo", "ai-fallback"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": [],
+      "forbidden": []
+    },
+    "confidence": [],
+    "ai_should_invoke": true,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

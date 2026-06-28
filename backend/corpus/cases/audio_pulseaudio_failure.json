@@ -1,0 +1,17 @@
+{
+  "id": "audio_pulseaudio_failure",
+  "description": "Wine cannot connect to PulseAudio — no sound server running, audio init fails",
+  "log": "Game: Red Dead Redemption 2\nAppID: 1174180\nProton: 9.0-3\nGPU: NVIDIA GeForce RTX 3070\n\nfsync: up and running.\nwine: Failed to initialize audio: failed to connect to pulseaudio server\nerr:   winepulse: could not connect to pulseaudio\npipewire-pulse: connection refused\nerr:   audio: failed to initialize WASAPI\n\nGame exited with status 1\n",
+  "tags": ["audio", "pulseaudio", "pipewire", "nvidia"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["PULSEAUDIO_RELATED"],
+      "forbidden": ["VULKAN_DRIVER_MISSING", "EAC_FAILURE"]
+    },
+    "confidence": ["low", "medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

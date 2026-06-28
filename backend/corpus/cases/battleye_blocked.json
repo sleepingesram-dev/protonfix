@@ -1,0 +1,17 @@
+{
+  "id": "battleye_blocked",
+  "description": "BattlEye refuses to start on Linux — exit code 3 with standard BE rejection message",
+  "log": "Game: DayZ\nAppID: 221100\nProton: 10.0-1\nGPU: AMD Radeon RX 7900 XTX\n\nfsync: up and running.\nFailed to initialize BattlEye Service: Launch from Steam\nerr:   BattlEye anti-cheat service failed to start\nBattlEye: client not running\n\nGame exited with status 3\n",
+  "tags": ["anticheat", "battleye", "amd", "exit-code-3"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["BATTLEYE_FAILURE"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": ["exit code 3", "anti-cheat"]
+  }
+}

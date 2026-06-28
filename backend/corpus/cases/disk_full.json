@@ -1,0 +1,17 @@
+{
+  "id": "disk_full",
+  "description": "Steam can't write shader cache — partition is full, DXVK falls back / fails",
+  "log": "Game: Cyberpunk 2077\nAppID: 1091500\nProton: 10.0-1\nGPU: AMD Radeon RX 7900 XTX\n\nfsync: up and running.\nerr:   write: No space left on device\nerr:   failed to write shader cache: No space left on device\nerr:   DXVK: failed to store pipeline cache\ndisk write error\n\nGame exited with status 1\n",
+  "tags": ["disk", "storage"],
+  "expected": {
+    "primary_fingerprint": null,
+    "fingerprints": {
+      "required": ["DISK_FULL"],
+      "forbidden": ["EAC_FAILURE", "VULKAN_DRIVER_MISSING"]
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

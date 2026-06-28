@@ -1,0 +1,17 @@
+{
+  "id": "apex_vulkan_missing",
+  "description": "Apex Legends fails to launch — Vulkan ICD missing after partial Mesa install on AMD",
+  "log_path": "../../samples/apex/apex_failed_launch.log",
+  "tags": ["vulkan", "amd", "apex", "driver", "real-log"],
+  "expected": {
+    "primary_fingerprint": "VULKAN_DRIVER_MISSING",
+    "fingerprints": {
+      "required": ["VULKAN_DRIVER_MISSING", "VULKAN_INIT_FAILURE", "DXVK_ADAPTER_FAILURE"],
+      "forbidden": []
+    },
+    "confidence": ["medium", "high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": ["vulkan", "driver"],
+    "warnings_contain": []
+  }
+}

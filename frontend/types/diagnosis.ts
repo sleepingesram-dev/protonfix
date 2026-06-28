@@ -19,6 +19,8 @@ export interface Fingerprint {
 }
 
 export interface DiagnosisResult {
+  version?: string;
+
   filename: string;
   characters: number;
 
@@ -48,7 +50,6 @@ export interface DiagnosisResult {
     fingerprints: Fingerprint[];
     primary_fingerprint: Fingerprint | null;
     dependency_chain: string[];
-    // new fields — all optional so existing code keeps compiling
     exit_code?: number | null;
     launch_options?: string | null;
     sync_method?: "fsync" | "esync" | null;
@@ -70,6 +71,8 @@ export interface DiagnosisResult {
   known_issue: unknown;
   ai_used: boolean;
   ai_result: unknown;
+
+  history_id?: number;
 }
 
 export interface Stats {
@@ -86,14 +89,39 @@ export interface Stats {
 
 export interface HistoryEntry {
   id: number;
-  timestamp: string;
+  created_at: string;
   filename: string;
   game: string | null;
   appid: string | null;
   proton_version: string | null;
   primary_fingerprint: string | null;
-  confidence: string;
+  confidence: number | null;
   severity: string;
   summary: string;
   probable_cause: string;
+  ai_used?: boolean;
+}
+
+export interface RedactionCategory {
+  count: number;
+  reason: string;
+}
+
+export interface RedactionReport {
+  was_redacted: boolean;
+  total_redactions: number;
+  by_category: Record<string, RedactionCategory>;
+}
+
+export interface Submission {
+  id: number;
+  submitted_at: string;
+  filename: string | null;
+  note: string | null;
+  ip_hash: string;
+  status: "pending" | "reviewed" | "diagnosed";
+  log_size?: number;
+  log_text?: string;
+  diagnosis?: DiagnosisResult;
+  redaction?: RedactionReport;
 }

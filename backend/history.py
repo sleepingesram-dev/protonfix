@@ -4,8 +4,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from config import DATA_DIR
 
-DB_FILE = Path("history.db")
+DB_FILE = DATA_DIR / "history.db"
 
 
 def get_connection():

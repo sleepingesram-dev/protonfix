@@ -14,12 +14,12 @@ export default function TechnicalDetailsCard({
       </h3>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <p><strong>Game:</strong> {result.game || "Unknown"}</p>
-        <p><strong>App ID:</strong> {result.appid || "Unknown"}</p>
-        <p><strong>Proton:</strong> {result.proton_version || "Unknown"}</p>
-        <p><strong>DXVK:</strong> {result.dxvk_version || "Unknown"}</p>
-        <p><strong>VKD3D:</strong> {result.vkd3d_version || "Unknown"}</p>
-        <p><strong>GPU:</strong> {result.gpu || "Unknown"}</p>
+        <p><strong>Game:</strong> {result.parsed.game || "Unknown"}</p>
+        <p><strong>App ID:</strong> {result.parsed.appid || "Unknown"}</p>
+        <p><strong>Proton:</strong> {result.parsed.proton_version || "Unknown"}</p>
+        <p><strong>DXVK:</strong> {result.parsed.dxvk_version || "Unknown"}</p>
+        <p><strong>VKD3D:</strong> {result.parsed.vkd3d_version || "Unknown"}</p>
+        <p><strong>GPU:</strong> {result.parsed.gpu || "Unknown"}</p>
       </div>
     </div>
   );

@@ -1,0 +1,22 @@
+{
+  "id": "finals_gamescope_extension",
+  "description": "THE FINALS — VK_ERROR_EXTENSION_NOT_PRESENT in Gamescope + Gamemode session on Wayland",
+  "log_path": "../../samples/the-finals/the_finals_gamescope_gamemode_failure.log",
+  "tags": ["vulkan", "amd", "gamescope", "gamemode", "wayland", "the-finals", "real-log"],
+  "expected": {
+    "primary_fingerprint": "VK_ERROR_EXTENSION_NOT_PRESENT",
+    "fingerprints": {
+      "required": [
+        "VK_ERROR_EXTENSION_NOT_PRESENT",
+        "GAMESCOPE_VULKAN_INIT_FAILURE",
+        "DXVK_ADAPTER_FAILURE",
+        "GAMEMODE_REQUEST_FAILURE"
+      ],
+      "forbidden": []
+    },
+    "confidence": ["high"],
+    "ai_should_invoke": false,
+    "fix_steps_contain": [],
+    "warnings_contain": []
+  }
+}

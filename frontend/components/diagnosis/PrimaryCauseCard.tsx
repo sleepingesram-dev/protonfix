@@ -4,7 +4,7 @@ import { humanizeFingerprint } from "@/lib/fingerprints";
 import type { Fingerprint } from "@/types/diagnosis";
 
 type PrimaryCauseCardProps = {
-  fingerprint: Fingerprint;
+  fingerprint?: Fingerprint | null;
 };
 
 export default function PrimaryCauseCard({

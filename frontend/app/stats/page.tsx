@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Card from "../../components/Card";
-import StatCard from "../../components/StatCard";
+import Card from "@/components/ui/Card";
+import StatCard from "@/components/ui/StatCard";
 import type { Stats } from "@/types/diagnosis";
 import { getStats } from "@/lib/api";
 
