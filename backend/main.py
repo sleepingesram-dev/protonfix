@@ -4,7 +4,6 @@ from pathlib import Path
 import shutil
 
 from parser import parse_log
-from resolver import resolve_known_issues
 from synthesizer import synthesize_diagnosis
 from analyzer import analyze_log_text
 from stats import update_stats, get_stats
@@ -37,21 +36,18 @@ async def analyze(file: UploadFile = File(...)):
         log_text = f.read()
 
     parsed = parse_log(log_text)
-    known_issue = resolve_known_issues(parsed)
+    diagnosis = synthesize_diagnosis(parsed)
 
-    if known_issue:
-        diagnosis = known_issue
+    if diagnosis:
+        # known_issue is set only for hand-crafted KNOWN_ISSUES entries (for stats/UI)
+        known_issue = diagnosis if diagnosis.get("used_known_issue") else None
         ai_used = False
         ai_result = None
     else:
-        diagnosis = synthesize_diagnosis(parsed)
-        if diagnosis:
-            ai_used = False
-            ai_result = None
-        else:
-            diagnosis = analyze_log_text(log_text, parsed)
-            ai_used = True
-            ai_result = diagnosis
+        known_issue = None
+        diagnosis = analyze_log_text(log_text, parsed)
+        ai_used = True
+        ai_result = diagnosis
 
     result = {
         "filename": file.filename,
