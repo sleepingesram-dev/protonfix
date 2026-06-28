@@ -48,6 +48,21 @@ export interface DiagnosisResult {
     fingerprints: Fingerprint[];
     primary_fingerprint: Fingerprint | null;
     dependency_chain: string[];
+    // new fields — all optional so existing code keeps compiling
+    exit_code?: number | null;
+    launch_options?: string | null;
+    sync_method?: "fsync" | "esync" | null;
+    session_type?: string | null;
+    display_server?: "wayland" | "x11" | null;
+    kernel_version?: string | null;
+    driver_version?: string | null;
+    vulkan_driver_version?: string | null;
+    prefix_action?: "created" | "upgraded" | null;
+    prefix_upgrade_from?: string | null;
+    game_exe?: string | null;
+    gamescope_version?: string | null;
+    dx_level?: string | null;
+    cpu?: string | null;
   };
 
   dependency_chain: string[];
