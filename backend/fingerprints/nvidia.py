@@ -13,7 +13,6 @@ NVIDIA_FINGERPRINTS = [
             "nvidia driver",
             "nvidia: error",
             "nvidia: failed",
-            "nvrm: xid",
             "nvidia-modeset:",
             "nvidia: module",
             "failed to initialize nvml",

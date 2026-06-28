@@ -528,23 +528,6 @@ KNOWN_ISSUES = {
         ],
     },
 
-    "MEMORY_ALLOCATION_FAILURE": {
-        "title": "Memory Allocation Failure",
-        "summary": "The game or compatibility layer could not allocate the memory it needed.",
-        "probable_cause": "A memory allocation call returned an error, usually because available RAM or address space was exhausted.",
-        "severity": "high",
-        "fix_steps": [
-            "Close background applications.",
-            "Lower game settings.",
-            "Check RAM and swap usage.",
-            "Reboot and try again.",
-        ],
-        "recommended_commands": [
-            "free -h",
-        ],
-        "warnings": [],
-    },
-
     # ---- Storage ----
 
     "DISK_FULL": {
@@ -623,21 +606,6 @@ KNOWN_ISSUES = {
         "warnings": [
             "GE-Proton is the easiest fix for mfplat issues — standard Proton requires manual steps.",
         ],
-    },
-
-    "WINDOWS_MEDIA_COMPONENT_RELATED": {
-        "title": "Windows Media Component Missing",
-        "summary": "A Windows media component (wmvcore, etc.) required by the game is not available.",
-        "probable_cause": "The game requires Windows media DLLs for video or audio playback that are not present in the standard Proton prefix.",
-        "severity": "medium",
-        "fix_steps": [
-            "Use GE-Proton, which includes media component support.",
-            "Check whether the issue occurs only on video/cutscene playback.",
-            "Verify game files in Steam.",
-            "Check ProtonDB for game-specific media workarounds.",
-        ],
-        "recommended_commands": [],
-        "warnings": [],
     },
 
     # ---- Library mismatches ----

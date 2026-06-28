@@ -9,7 +9,9 @@ type DiagnosisSummaryProps = {
 export default function DiagnosisSummary({ result }: DiagnosisSummaryProps) {
   const sourceLabel = result.used_known_issue
     ? `Known Issue Engine (${humanizeFingerprint(result.known_issue_id)})`
-    : "AI Analysis";
+    : result.ai_used
+      ? "AI Analysis"
+      : "Deterministic Engine";
 
   return (
     <div>
