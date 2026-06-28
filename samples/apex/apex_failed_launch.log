@@ -1,0 +1,33 @@
+======================
+Proton: 10.0-1
+Game: Apex Legends
+AppID: 1172470
+======================
+
+Steam Runtime Launch Service: starting game
+
+fsync: up and running.
+wine: RLIMIT_NICE is <= 20, unable to use setpriority safely
+
+info:  Game: r5apex.exe
+info:  DXVK: v2.6
+info:  VKD3D-Proton: v2.14
+
+err:   Failed to create Vulkan instance
+err:   VK_ERROR_INCOMPATIBLE_DRIVER
+
+warn:  No compatible Vulkan physical device found
+
+err:   DXGI: Failed to initialize adapter
+
+wine: Unhandled page fault on read access
+
+Game exited with status 1
+
+System Information:
+GPU: AMD Radeon RX 7800 XT
+Driver: Missing Vulkan driver
+Kernel: 7.0.10-cachyos
+
+Possible cause:
+Vulkan packages not installed or broken.

@@ -1,0 +1,56 @@
+{
+  "total_logs": 24,
+  "fingerprints": {
+    "VULKAN_DRIVER_MISSING": 17,
+    "VULKAN_INIT_FAILURE": 18,
+    "DXVK_ADAPTER_FAILURE": 20,
+    "WINE_CRASH": 21,
+    "VKD3D_RELATED_FAILURE": 21,
+    "DXVK_RELATED_FAILURE": 21,
+    "VK_ERROR_EXTENSION_NOT_PRESENT": 4,
+    "GAMEMODE_REQUEST_FAILURE": 4,
+    "STEAM_RUNTIME_FAILURE": 4,
+    "MISSING_FILE": 4,
+    "STEAM_LINUX_RUNTIME_RELATED": 4,
+    "PRESSURE_VESSEL_RELATED": 4,
+    "GAMESCOPE_FAILURE": 4,
+    "MANGOHUD_FAILURE": 4,
+    "GE_PROTON_USED": 4,
+    "GAMEMODE_RELATED": 4,
+    "PKEXEC_PERMISSION_ISSUE": 4,
+    "RADV_RELATED_FAILURE": 4,
+    "DIRECTX11_RELATED": 4,
+    "GAMESCOPE_VULKAN_INIT_FAILURE": 3,
+    "GAMESCOPE_SWAPCHAIN_FAILURE": 3,
+    "GAMESCOPE_OUTPUT_FAILURE": 3,
+    "GAMEMODE_DAEMON_RELATED": 3,
+    "MANGOHUD_CONFIG_RELATED": 3
+  },
+  "games": {
+    "Apex Legends": 17,
+    "THE FINALS": 7
+  },
+  "proton_versions": {
+    "10.0-1": 17,
+    "GE-Proton10-34": 7
+  },
+  "gpus": {},
+  "categories": {
+    "Graphics Driver": 36,
+    "DXVK": 45,
+    "Wine": 21,
+    "VKD3D": 21,
+    "Vulkan": 3,
+    "GameMode": 11,
+    "Steam Runtime": 12,
+    "Missing File": 4,
+    "Gamescope": 13,
+    "Performance Overlay": 4,
+    "Proton Version": 4,
+    "Permissions": 4,
+    "AMD Vulkan": 4,
+    "MangoHud": 3
+  },
+  "ai_used": 7,
+  "known_issue_used": 17
+}
