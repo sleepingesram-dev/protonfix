@@ -5,6 +5,7 @@ import shutil
 
 from parser import parse_log
 from resolver import resolve_known_issues
+from synthesizer import synthesize_diagnosis
 from analyzer import analyze_log_text
 from stats import update_stats, get_stats
 from history import save_diagnosis, get_history, get_diagnosis
@@ -43,9 +44,14 @@ async def analyze(file: UploadFile = File(...)):
         ai_used = False
         ai_result = None
     else:
-        diagnosis = analyze_log_text(log_text, parsed)
-        ai_used = True
-        ai_result = diagnosis
+        diagnosis = synthesize_diagnosis(parsed)
+        if diagnosis:
+            ai_used = False
+            ai_result = None
+        else:
+            diagnosis = analyze_log_text(log_text, parsed)
+            ai_used = True
+            ai_result = diagnosis
 
     result = {
         "filename": file.filename,
