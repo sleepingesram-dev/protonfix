@@ -104,7 +104,7 @@ export default function AdminSubmissionPage() {
 
         {diag && <ParsedMetadata parsed={diag.parsed} />}
 
-        {diag && <FingerprintCard fingerprints={diag.fingerprints} />}
+        {diag && <FingerprintCard fingerprints={diag.parsed.fingerprints} />}
 
         {submission?.log_text && <RawLogViewer logText={submission.log_text} />}
       </div>
