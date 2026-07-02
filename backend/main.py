@@ -16,7 +16,7 @@ from history import save_diagnosis, get_history, get_diagnosis
 from submissions import save_submission, get_submissions, get_submission, attach_diagnosis
 from redactor import redact
 
-APP_VERSION = "0.7.0"
+APP_VERSION = "0.8.0"
 MAX_LOG_BYTES = 10 * 1024 * 1024  # 10 MB
 
 app = FastAPI(title="ProtonFix", version=APP_VERSION)
@@ -151,8 +151,9 @@ async def submit_log(
     redaction = redact(log_text)
 
     ip = request.client.host if request.client else "unknown"
+    # The UI caps notes at 500 chars; enforce the same limit server-side.
     sub_id = save_submission(
-        redaction.text, filename, note.strip(), ip, redaction.report()
+        redaction.text, filename, note.strip()[:500], ip, redaction.report()
     )
     return {
         "submitted": True,

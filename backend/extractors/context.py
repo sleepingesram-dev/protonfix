@@ -169,7 +169,7 @@ class ContextEvidenceExtractor:
                 supports=_GAMESCOPE_FPS,
             ))
 
-        if "gamemoderun" in lower or ("gamemode" in lower and "GAMESCOPE" not in opts):
+        if "gamemoderun" in lower or ("gamemode" in lower and "gamescope" not in lower):
             items.append(_ev(
                 id="ctx_launch_gamemode",
                 raw_text=f"Launch options include gamemoderun: {opts}",
