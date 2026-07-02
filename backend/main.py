@@ -1,3 +1,9 @@
+import os
+import secrets
+import time
+import uuid
+from pathlib import Path
+
 from fastapi import FastAPI, Form, HTTPException, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,13 +24,34 @@ app = FastAPI(title="ProtonFix", version=APP_VERSION)
 UPLOAD_DIR = DATA_DIR / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
+# Comma-separated list of allowed origins, e.g.
+#   PROTONFIX_ALLOWED_ORIGINS=https://protonfix.example.com
+# Defaults to "*" for local development. Credentials are only enabled for an
+# explicit origin list — the CORS spec forbids wildcard + credentials.
+_origins = [
+    origin.strip()
+    for origin in os.getenv("PROTONFIX_ALLOWED_ORIGINS", "*").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_credentials="*" not in _origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Optional shared secret protecting the /admin endpoints. If unset, admin
+# routes stay open (local development). Set it for any public deployment.
+ADMIN_TOKEN = os.getenv("PROTONFIX_ADMIN_TOKEN", "")
+
+
+def _require_admin(request: Request) -> None:
+    if ADMIN_TOKEN and not secrets.compare_digest(
+        request.headers.get("X-Admin-Token", ""), ADMIN_TOKEN
+    ):
+        raise HTTPException(status_code=401, detail="Invalid or missing admin token")
 
 
 async def _read_upload(file: UploadFile) -> bytes:
@@ -92,9 +119,13 @@ async def health():
 @app.post("/analyze-log")
 async def analyze(file: UploadFile = File(...)):
     raw = await _read_upload(file)
+    if not raw.strip():
+        raise HTTPException(status_code=400, detail="Uploaded log file is empty.")
     filename = _safe_filename(file.filename or "upload.log")
 
-    (UPLOAD_DIR / filename).write_bytes(raw)
+    # Prefix with timestamp + random suffix so same-named uploads never collide.
+    stored_name = f"{time.strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}_{filename}"
+    (UPLOAD_DIR / stored_name).write_bytes(raw)
 
     log_text = raw.decode("utf-8", errors="ignore")
     parsed = parse_log(log_text)
@@ -112,6 +143,8 @@ async def submit_log(
     note: str = Form(""),
 ):
     raw = await _read_upload(file)
+    if not raw.strip():
+        raise HTTPException(status_code=400, detail="Uploaded log file is empty.")
     filename = _safe_filename(file.filename or "upload.log")
     log_text = raw.decode("utf-8", errors="ignore")
 
@@ -147,12 +180,14 @@ async def history_item(diagnosis_id: int):
 
 
 @app.get("/admin/submissions")
-async def admin_submissions():
+async def admin_submissions(request: Request):
+    _require_admin(request)
     return get_submissions()
 
 
 @app.get("/admin/submissions/{sub_id}")
-async def admin_submission(sub_id: int):
+async def admin_submission(sub_id: int, request: Request):
+    _require_admin(request)
     result = get_submission(sub_id)
     if not result:
         raise HTTPException(status_code=404, detail="Submission not found")
@@ -160,7 +195,8 @@ async def admin_submission(sub_id: int):
 
 
 @app.post("/admin/submissions/{sub_id}/diagnose")
-async def admin_diagnose(sub_id: int):
+async def admin_diagnose(sub_id: int, request: Request):
+    _require_admin(request)
     sub = get_submission(sub_id)
     if not sub:
         raise HTTPException(status_code=404, detail="Submission not found")

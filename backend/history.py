@@ -1,7 +1,6 @@
 import json
 import sqlite3
-from datetime import datetime
-from pathlib import Path
+from datetime import datetime, timezone
 from typing import Any
 
 from config import DATA_DIR
@@ -60,7 +59,7 @@ def save_diagnosis(result: dict[str, Any]) -> int:
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                datetime.utcnow().isoformat(),
+                datetime.now(timezone.utc).isoformat(),
                 result.get("filename"),
                 parsed.get("game"),
                 parsed.get("appid"),
