@@ -7,7 +7,7 @@ Fingerprint-first: pattern matching runs against a hardcoded knowledge graph. Op
 ## Stack
 
 - **Backend** — FastAPI (Python), SQLite, regex-based fingerprint engine
-- **Frontend** — Next.js 15, TypeScript, Tailwind CSS
+- **Frontend** — Next.js 16, TypeScript, Tailwind CSS
 
 ## Quick Start
 
