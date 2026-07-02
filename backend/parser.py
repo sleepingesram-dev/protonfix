@@ -300,8 +300,9 @@ def parse_log(log_text: str) -> dict:
 
     # Phase 5: fingerprint matching with context-aware confidence
     best_match_per_fingerprint: dict[str, tuple[dict, int]] = {}
+    log_text_lower = log_text.lower()
     for pattern, info in ERROR_PATTERNS.items():
-        if pattern.lower() in log_text.lower():
+        if pattern.lower() in log_text_lower:
             fingerprint = info["fingerprint"]
             confidence = calculate_confidence(pattern, info, context=data)
 
