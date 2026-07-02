@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Submission } from "@/types/diagnosis";
 
 type SubmissionHeaderProps = {
@@ -22,12 +23,12 @@ export default function SubmissionHeader({
         · IP hash: <code className="font-mono">{submission.ip_hash}</code>
       </p>
 
-      <a
+      <Link
         href="/admin"
         className="mt-3 inline-block text-sm text-blue-400 hover:text-blue-300"
       >
         ← All submissions
-      </a>
+      </Link>
     </div>
   );
 }

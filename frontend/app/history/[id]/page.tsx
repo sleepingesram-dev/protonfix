@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getHistoryEntry } from "@/lib/api";
+import type { DiagnosisResult, Fingerprint } from "@/types/diagnosis";
 
-type Result = any;
+type Result = DiagnosisResult;
 
 function getSeverityBadge(severity: string) {
   const level = severity?.toLowerCase();
@@ -121,26 +123,26 @@ export default function HistoryDetailPage() {
           </p>
 
           <div className="mt-4 flex gap-3">
-            <a
+            <Link
               href="/analyze"
               className="rounded bg-zinc-800 px-3 py-2 text-sm font-semibold hover:bg-zinc-700"
             >
               Analyze
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/history"
               className="rounded bg-zinc-800 px-3 py-2 text-sm font-semibold hover:bg-zinc-700"
             >
               History
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/stats"
               className="rounded bg-zinc-800 px-3 py-2 text-sm font-semibold hover:bg-zinc-700"
             >
               Stats
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -239,7 +241,7 @@ export default function HistoryDetailPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               {result.parsed?.fingerprints?.length > 0 ? (
-                result.parsed.fingerprints.map((item: any, index: number) => {
+                result.parsed.fingerprints.map((item: Fingerprint, index: number) => {
                   const commandText = item.safe_commands?.join("\n") || "";
 
                   return (

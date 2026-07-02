@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Submission } from "@/types/diagnosis";
-import { getSubmissions } from "@/lib/api";
+import { ApiError, getSubmissions } from "@/lib/api";
 import Card from "@/components/ui/Card";
+import AdminTokenForm from "@/components/admin/AdminTokenForm";
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-yellow-900 text-yellow-200",
@@ -16,17 +17,47 @@ export default function AdminPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unauthorized, setUnauthorized] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     getSubmissions()
-      .then(setSubmissions)
-      .catch((err) =>
-        setError(
-          err instanceof Error ? err.message : "Failed to load submissions."
-        )
-      )
+      .then((subs) => {
+        setSubmissions(subs);
+        setUnauthorized(false);
+        setError(null);
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          setUnauthorized(true);
+        } else {
+          setError(
+            err instanceof Error ? err.message : "Failed to load submissions."
+          );
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function retry() {
+    setLoading(true);
+    setError(null);
+    setUnauthorized(false);
+    load();
+  }
+
+  if (unauthorized) {
+    return (
+      <main className="min-h-screen bg-zinc-950 p-8 text-white">
+        <div className="mx-auto max-w-xl">
+          <AdminTokenForm onSubmit={retry} />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-zinc-950 p-8 text-white">
@@ -42,7 +73,7 @@ export default function AdminPage() {
             </p>
           </div>
           <span className="rounded-lg border border-yellow-700 bg-yellow-950/40 px-3 py-1 text-xs font-semibold text-yellow-300">
-            Local — No Auth
+            Admin Area
           </span>
         </div>
 
