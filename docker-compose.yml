@@ -5,7 +5,9 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
+      # Optional: the deterministic engine runs without an OpenAI key.
+      - path: ./backend/.env
+        required: false
     volumes:
       - protonfix_data:/data
     healthcheck:

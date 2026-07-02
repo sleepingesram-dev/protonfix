@@ -25,10 +25,14 @@ Frontend connects to `http://127.0.0.1:8000` (set in `frontend/.env.local`).
 ## Key Commands
 
 ```bash
-# Backend tests / smoke checks
+# Backend test suite
 cd backend
+python -m pytest tests/
+
+# Backend smoke checks
 python run_sample_tests.py
 python test_parser.py
+python corpus/harness.py
 
 # Frontend lint
 cd frontend
@@ -50,7 +54,7 @@ Upload Log → Parse → Extract Evidence → Generate Hypotheses
 - `backend/parser.py` — extracts versions, errors from raw log text
 - `backend/evidence.py` — `Evidence` dataclass with `EvidenceKind` and `EvidenceSeverity`
 - `backend/fingerprints/database.py` — `ERROR_PATTERNS`: raw log pattern → fingerprint mapping
-- `backend/fingerprints/known_issues.py` — `KNOWN_ISSUES`: pre-written solutions (currently sparse)
+- `backend/fingerprints/known_issues.py` — `KNOWN_ISSUES`: pre-written solutions for ~40 fingerprints
 - `backend/fingerprints/dependencies.py` — `ROOT_CAUSE_GRAPH`: causal parent→child relationships
 - `backend/fingerprints/ranking.py` — hypothesis scoring via `ROOT_CAUSE_PRIORITY` weights (0–100)
 - `backend/analyzer.py` — OpenAI fallback; only invoked when pattern matching yields nothing
@@ -66,9 +70,9 @@ The knowledge base is **hardcoded Python dicts**, not a database. To add new iss
 
 ## Gotchas
 
-- **`.env` must not be committed** — `backend/.env` contains the OpenAI API key. Ensure it's in `.gitignore`.
-- **CORS is open** — FastAPI uses `allow_origins=["*"]`; tighten this before any public deployment.
-- **`KNOWN_ISSUES` is sparse** — only `VULKAN_DRIVER_MISSING` has a solution; most diagnoses go through the AI fallback or return raw fingerprint data.
-- **Evidence field naming** — `evidence.py` has an `evidence_type` field but internal code sometimes expects `kind`; be consistent when modifying evidence handling.
-- **Confidence type mismatch** — confidence is `int` internally but serialized as `str` in some frontend-facing paths; don't change one side without updating the other.
-- **File upload collisions** — uploads are saved to `/uploads/<original_filename>`; same-named files overwrite silently.
+- **`.env` must not be committed** — `backend/.env` contains the OpenAI API key. It's covered by `.gitignore`.
+- **CORS** — defaults to `*` for local dev; set `PROTONFIX_ALLOWED_ORIGINS` (comma-separated) for any public deployment. The prod compose overlay sets it from `DOMAIN`.
+- **Admin auth** — `/admin` endpoints are open unless `PROTONFIX_ADMIN_TOKEN` is set; then they require an `X-Admin-Token` header (the admin UI prompts for it).
+- **AI fallback is optional** — without `OPENAI_API_KEY` the app still runs; unmatched logs get a low-confidence "AI unavailable" diagnosis from `analyzer.py`.
+- **Two confidence representations** — fingerprint confidence is an `int` 0–100; diagnosis-level confidence is a `"low" | "medium" | "high"` label. Don't mix them up when serializing.
+- **Runtime data lives under `PROTONFIX_DATA_DIR`** — `history.db`, `uploads/`, and `stats/` are runtime artifacts and gitignored; never commit them.

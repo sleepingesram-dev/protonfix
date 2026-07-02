@@ -230,3 +230,10 @@ node_modules/
 __pycache__/
 *.pyc
 CLAUDE.local.md
+
+# ProtonFix runtime data — lives under PROTONFIX_DATA_DIR, never in git
+backend/history.db
+backend/uploads/
+backend/stats/
+backend/project_dump.txt
+backups/

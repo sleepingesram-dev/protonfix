@@ -7,18 +7,12 @@ import RawLogViewer from "@/components/admin/RawLogViewer";
 import DiagnosisCard from "@/components/admin/DiagnosisCard";
 import SubmissionMetadata from "@/components/admin/SubmissionMetadata";
 import SubmissionHeader from "@/components/admin/SubmissionHeader";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getSubmission, diagnoseSubmission } from "@/lib/api";
+import { ApiError, getSubmission, diagnoseSubmission } from "@/lib/api";
 import type { Submission, DiagnosisResult, RedactionReport } from "@/types/diagnosis";
-import Card from "@/components/ui/Card";
 import ErrorBanner from "@/components/ui/ErrorBanner";
-
-const STATUS_COLORS: Record<string, string> = {
-  pending: "bg-yellow-900 text-yellow-200",
-  diagnosed: "bg-green-900 text-green-200",
-  reviewed: "bg-blue-900 text-blue-200",
-};
+import AdminTokenForm from "@/components/admin/AdminTokenForm";
 
 export default function AdminSubmissionPage() {
   const params = useParams<{ id: string }>();
@@ -28,18 +22,38 @@ export default function AdminSubmissionPage() {
   const [loading, setLoading] = useState(true);
   const [diagnosing, setDiagnosing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unauthorized, setUnauthorized] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     if (!subId) return;
     getSubmission(subId)
-      .then(setSubmission)
-      .catch((err) =>
-        setError(
-          err instanceof Error ? err.message : "Failed to load submission."
-        )
-      )
+      .then((sub) => {
+        setSubmission(sub);
+        setUnauthorized(false);
+        setError(null);
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          setUnauthorized(true);
+        } else {
+          setError(
+            err instanceof Error ? err.message : "Failed to load submission."
+          );
+        }
+      })
       .finally(() => setLoading(false));
   }, [subId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function retry() {
+    setLoading(true);
+    setError(null);
+    setUnauthorized(false);
+    load();
+  }
 
   async function runDiagnosis() {
     if (!subId) return;
@@ -59,6 +73,16 @@ export default function AdminSubmissionPage() {
     } finally {
       setDiagnosing(false);
     }
+  }
+
+  if (unauthorized) {
+    return (
+      <main className="min-h-screen bg-zinc-950 p-8 text-white">
+        <div className="mx-auto max-w-xl">
+          <AdminTokenForm onSubmit={retry} />
+        </div>
+      </main>
+    );
   }
 
   if (loading) {

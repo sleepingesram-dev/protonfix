@@ -72,10 +72,17 @@ docker compose down -v
 
 ## Notes
 
-- **CORS**: The backend allows all origins (`allow_origins=["*"]`). Restrict
-  this in `backend/main.py` before exposing the service to the internet.
-- **Admin**: `/admin` has no authentication. Do not expose it publicly.
-- **File uploads**: Limited to 10 MB per log. Stored under `/data/uploads/`.
+- **CORS**: Defaults to all origins (`*`) for local development. Set
+  `PROTONFIX_ALLOWED_ORIGINS` (comma-separated) to your public frontend
+  origin in production — the prod overlay does this automatically from
+  `DOMAIN`.
+- **Admin**: `/admin` endpoints are open by default (local dev). Set
+  `PROTONFIX_ADMIN_TOKEN` (via `ADMIN_TOKEN` in the root `.env` for the
+  prod overlay) to require an `X-Admin-Token` header; the admin UI prompts
+  for the token and keeps it in sessionStorage.
+- **File uploads**: Limited to 10 MB per log. Stored under `/data/uploads/`
+  with a timestamped unique filename, so identical names never overwrite
+  each other.
 
 ---
 
@@ -150,6 +157,7 @@ cp backend/.env.example backend/.env
 # Root .env — sets DOMAIN and activates the prod overlay
 cp .env.example .env
 # Edit .env: set DOMAIN=protonfix.example.com
+#            set ADMIN_TOKEN to a long random string (protects /admin)
 ```
 
 ---

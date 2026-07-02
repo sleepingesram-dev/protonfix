@@ -10,6 +10,13 @@
 # Required: DOMAIN must be set (in .env or the environment) before building.
 
 services:
+  backend:
+    environment:
+      # Lock CORS to the public frontend origin in production.
+      PROTONFIX_ALLOWED_ORIGINS: https://${DOMAIN}
+      # Protects /admin endpoints; set ADMIN_TOKEN in .env.
+      PROTONFIX_ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+
   # Rebuild frontend with the production API URL baked in.
   frontend:
     build:
